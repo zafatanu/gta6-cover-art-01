@@ -1,0 +1,29 @@
+/* Velvet Coast studio fonts: Barlow Condensed (OFL) + Caveat (OFL), self-hosted, offline. */
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('./barlow-condensed-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('./barlow-condensed-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 800;
+  font-display: block;
+  src: url('./barlow-condensed-800.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('./caveat-700.woff2') format('woff2');
+}
