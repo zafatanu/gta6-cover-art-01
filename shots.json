@@ -1,1 +1,5 @@
-[{"h":1080,"name":"1-cover.jpg","query":"?shot=cover&size=1:1&layout=vice-grid&grade=sunset&heat=3&title=AFTER%20DARK&script=every%20story%20has%20a%20price","w":1080},{"h":720,"name":"2-editor.jpg","query":"?shot=editor","w":1280},{"h":1280,"name":"3-cover-4x5.jpg","query":"?shot=cover&size=4:5&layout=main-character&grade=neon&heat=5&title=LAST%20LIGHT&script=paradise%20never%20sleeps&tagline=FIVE%20STARS%20%C2%B7%20NO%20WAY%20OUT&quote=NOWHERE%20LEFT%20TO%20RUN","w":1024},{"h":720,"name":"4-cover-16x9.jpg","query":"?shot=cover&size=16:9&layout=cinematic-strip&grade=golden&heat=1&title=GOLDEN%20COAST&script=the%20crew&tagline=ONE%20COAST%20%C2%B7%20NO%20RULES%20%C2%B7%20COMING%20SOON&quote=A%20SUN-BLEACHED%20THRILL","w":1280}]
+[
+  { "name": "1-cover.jpg", "query": "?shot=cover&photo=pier&caption=Sunset%20Heist", "w": 1080, "h": 1080 },
+  { "name": "2-editor.jpg", "query": "?shot=editor&photo=boulevard&caption=Boulevard%20Queen", "w": 1280, "h": 720 },
+  { "name": "3-cover.jpg", "query": "?shot=cover&photo=boulevard&caption=Boulevard%20Queen", "w": 1080, "h": 1080 }
+]
