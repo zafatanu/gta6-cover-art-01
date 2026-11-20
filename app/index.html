@@ -3,20 +3,125 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Velvet Coast — GTA 6 Cover Art Studio</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+<header class="topbar">
+  <div class="brand">VELVET <span>COAST</span> <em>cover studio</em></div>
+  <nav class="steps" aria-label="Steps">
+    <span class="step active">1 · Add photos</span>
+    <span class="step">2 · Layout &amp; grade</span>
+    <span class="step">3 · Export PNG</span>
+  </nav>
+  <div id="faceCheck" class="face-check ok" role="status">● FACE CHECK: GREEN — every face once, no text on a face</div>
+</header>
+
+<main class="studio">
+  <aside class="rail left">
+    <section class="card">
+      <h2>Photo library</h2>
+      <p class="hint">Click a photo to fill the selected panel. One face, one time — the gate refuses repeats.</p>
+      <div id="dropZone" class="drop">
+        Drop photos here, paste, or
+        <label class="file-btn">Choose Files<input id="fileInput" type="file" accept="image/*" multiple hidden></label>
+      </div>
+      <div id="library" class="library"></div>
+      <div class="lib-actions">
+        <button id="fillAllBtn" type="button">Fill all panels from this photo</button>
+        <button id="spreadBtn" type="button">Spread photos across panels</button>
+        <button id="surpriseBtn" type="button" class="pink">🎲 Surprise me</button>
+      </div>
+      <p class="hint">Photos stay on your computer. No uploads, no network.</p>
+    </section>
+  </aside>
+
+  <section class="stage">
+    <div class="stage-top">
+      <div id="sizeTabs" class="size-tabs" role="tablist">
+        <button type="button" data-format="1:1">1:1</button>
+        <button type="button" data-format="4:5">4:5</button>
+        <button type="button" data-format="16:9" class="active">16:9</button>
+      </div>
+      <div class="stage-actions">
+        <button id="undoBtn" type="button">Undo</button>
+        <button id="redoBtn" type="button">Redo</button>
+        <button id="resetBtn" type="button" title="Back to the default Velvet Coast cover">Reset</button>
+        <label class="check"><input id="markersCheck" type="checkbox" checked> Face markers</label>
+      </div>
+    </div>
+    <div id="dedupeWarn" class="dedupe" hidden></div>
+    <div class="canvas-wrap">
+      <canvas id="cover" width="1920" height="1080" aria-label="The cover"></canvas>
+      <div id="markers" class="markers"></div>
+    </div>
+    <p class="hint centre">Drag to pan the selected panel · scroll to zoom · Alt-drag swaps panels</p>
+    <div id="gates" class="gates"></div>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <aside class="rail right">
+    <section class="card panel-card">
+      <h2>Panel editor</h2>
+      <div id="panelBtns" class="panel-btns"></div>
+      <h3 id="panelTitle">Panel 1</h3>
+      <p id="panelSub" class="hint"></p>
+      <label>Zoom <span id="zoomVal">1.00×</span><input id="zoomRange" type="range" min="1" max="3" step="0.01" value="1"></label>
+      <label>Move X<input id="moveXRange" type="range" min="-0.5" max="0.5" step="0.01" value="0"></label>
+      <label>Move Y<input id="moveYRange" type="range" min="-0.5" max="0.5" step="0.01" value="0"></label>
+      <label>Rotation<input id="rotRange" type="range" min="-12" max="12" step="0.5" value="0"></label>
+      <label class="check"><input id="flipCheck" type="checkbox"> Flip horizontal</label>
+      <label>Panel grade
+        <select id="panelGrade"><option>Same as cover</option></select>
+      </label>
+      <button id="resetCrop" type="button">Reset crop</button>
+      <div class="tag-fields">
+        <label>Role tag<input id="roleTag" type="text" maxlength="24" placeholder="THE BOSS"></label>
+        <label>Place<input id="placeField" type="text" maxlength="24" placeholder="OCEAN DRIVE"></label>
+        <label>Time<input id="timeField" type="text" maxlength="12" placeholder="6:42 PM"></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Captions</h2>
+      <label>Title<input id="titleField" type="text" maxlength="24" value="VELVET COAST"></label>
+      <label>Script subtitle<input id="scriptField" type="text" maxlength="40" value="one last summer"></label>
+      <label>Tagline<input id="taglineField" type="text" maxlength="60" value="FIVE FRIENDS · ONE COAST · NO WAY BACK"></label>
+      <label>Press quote<input id="quoteField" type="text" maxlength="80" value="Five friends. One coast. No way back."></label>
+      <label>Volume<input id="volField" type="text" maxlength="12" value="VOL. 01"></label>
+    </section>
+
+    <section class="card">
+      <h2>Layout</h2>
+      <div id="layoutThumbs" class="layout-thumbs"></div>
+      <h2>Grade</h2>
+      <div id="gradeChips" class="grade-chips"></div>
+      <div class="sliders">
+        <label>Strength<input id="strengthRange" type="range" min="0.4" max="1.6" step="0.05" value="1"></label>
+        <label>Contrast<input id="contrastRange" type="range" min="0.6" max="1.5" step="0.05" value="1"></label>
+        <label>Saturation<input id="saturationRange" type="range" min="0.6" max="1.5" step="0.05" value="1"></label>
+        <label>Grain<input id="grainRange" type="range" min="0" max="2" step="0.1" value="1"></label>
+        <label>Vignette<input id="vignetteRange" type="range" min="0" max="2" step="0.1" value="1"></label>
+        <label>Halftone<input id="halftoneRange" type="range" min="0" max="2" step="0.1" value="1"></label>
+      </div>
+      <label class="wanted">Wanted heat <span id="wantedVal">★ 3 / 5 — Vice Sunset</span>
+        <input id="wantedDial" type="range" min="1" max="5" step="1" value="3">
+      </label>
+      <p class="hint">The dial re-grades the whole poster: 1 = calm Golden Hour, 3 = Vice Sunset, 5 = full Neon Night + police-light wash.</p>
+    </section>
+
+    <section class="card export">
+      <h2>Export PNG</h2>
+      <button id="exportCurrentBtn" type="button">Export PNG — current size</button>
+      <button id="exportAllBtn" type="button" class="pink">Export all three sizes</button>
+      <button id="exportCaseBtn" type="button">Export Case File back cover</button>
+      <p id="saveStatus" class="hint" role="status">1080×1080 · 1080×1350 · 1920×1080 · Case File 1080×1350</p>
+    </section>
+
+    <section class="card why">
+      <h2>Why this cover is safe</h2>
+      <p class="hint">The giant chrome title goes OVER the art, never over a face: hero faces sit above the title, fully clear. Halftone and grain are masked off skin. The seal keeps its distance from the barcode, and the panels fill the frame to the footer — no dead dark band.</p>
+    </section>
+  </aside>
 </main>
 <script type="module" src="./src/main.js"></script>
 </body>
