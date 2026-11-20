@@ -1,12 +1,13 @@
 # Velvet Coast — GTA-style Cover Studio
 
-[![make.fun](https://img.shields.io/badge/make.fun-bounty-ff2e88)](https://make.fun/bounty/gta6-cover-art-01)
-[![owner](https://img.shields.io/badge/owner-zafatanu-7b2fff)](https://github.com/zafatanu/gta6-cover-art-01)
-[![repo](https://img.shields.io/badge/repo-gta6--cover--art--01-ffd166)](https://github.com/zafatanu/gta6-cover-art-01)
+[![make.fun · gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+[![rank](https://make.fun/badge/gta6-cover-art-01/zafatanu/gta6-cover-art-01/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+[![reward](https://make.fun/badge/gta6-cover-art-01/zafatanu/gta6-cover-art-01/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 
-A web app that turns your photos into GTA 6-style cover art — five panels, a
-cinematic sunset grade, and giant condensed lettering — exported as real PNGs
-in 1080×1080, 1080×1350 and 1920×1080, plus a "Case File" back cover.
+A web app that turns your photos into GTA 6-style cover art — a crew of
+hard-looking characters in golden-hour light, big slanted panels, and a giant
+striped-chrome title stamped OVER the art — exported as real PNGs in
+1080×1080, 1080×1350 and 1920×1080, plus a "Case File" back cover.
 
 Built for [make.fun's "Make GTA 6 Cover Art" bounty](https://make.fun/bounty/gta6-cover-art-01) ($250 in USDC).
 
@@ -22,14 +23,15 @@ plus ES modules, local fonts and local sample photos.
 
 ## How it works
 
-1. **Add photos** — pick from the 18-photo sample library, drag & drop, paste,
+1. **Add photos** — pick from the 16-photo sample library, drag & drop, paste,
    or upload your own. Every photo carries a role (hero / character / vehicle /
    location), a face identity and a focal point; the crop follows the focal
-   point, never a forced centre.
-2. **Layout & grade** — five layouts (Coast Grid, Hero Mosaic, Cinematic
-   Strip, Full Bleed, Evidence Board), each with its own preset per size
-   (1:1, 4:5, 16:9). Six cinematic grades (Vice Sunset, Neon Night, Golden
-   Hour, Duotone Pink/Teal, Comic Ink, Noir Heat) with depth, contrast,
+   point, never a forced centre. The default cover is a crew: the hero plus a
+   second character, a driver, a rider and the skyline.
+2. **Layout & grade** — five layouts (Sunset Crew, Vice Diagonal, Crew
+   Mosaic, Cinematic Strip, Full Bleed), each with its own preset per size
+   (1:1, 4:5, 16:9). Six warm golden-hour grades (Golden Hour, Vice Sunset,
+   Ember Heat, Neon Night, Duotone Pink/Teal, Noir Heat) with depth, contrast,
    saturation, grain and vignette sliders, plus a Wanted heat dial (1–5) that
    re-grades the whole poster.
 3. **Export PNG** — one click exports all three sizes plus the Case File back
@@ -38,34 +40,33 @@ plus ES modules, local fonts and local sample photos.
 ## The face rule
 
 Round 2 of this entry failed because the title sat on the hero's face. This
-build fixes it structurally, not cosmetically:
+build fixes it structurally, not cosmetically — by putting the title where a
+poster title belongs and keeping faces out of its way:
 
-- The title lives in **its own band** below the photos (Coast Grid default),
-  so it can never hit a face. The other layouts keep faces in the upper zone
-  of their panels and the band below a hard 62%-of-height line.
+- The giant striped-chrome title goes **over the art, mid-poster**, with a
+  pink neon script overlapping it. It covers bodies, cars and sky by design.
+  Hero faces sit **above** the title, fully clear: every face is composed
+  into the upper zone of its panel, and panels start below a masthead strip
+  (stars + quote, VOL. 01) that never touches a face.
 - **Five render gates** run before every export and export is blocked while
   any fails: unique faces (no face twice), face collision (no text or ornament
-  cuts a face box expanded by 10%), decoration inside the safe zone, minimum
-  panel size, valid aspect-ratio layout. The gate results and a green/red
-  Face Check indicator are visible in the UI.
-- Halftone and grain are **masked off faces** — effects run on background,
-  clothing, sky and dark areas only.
+  cuts a face box expanded by 10%), decoration inside the safe zone (furniture
+  never overlaps itself or leaves the poster; the script overlapping the title
+  is by design), minimum panel size, valid aspect-ratio layout. The gate
+  results and a green/red Face Check indicator are visible in the UI.
+- Halftone and grain are **masked off faces** — the print texture is clipped
+  to each panel minus the face box expanded by 20%, so effects run on
+  background, clothing, sky and dark areas only, never on skin.
 
 ## Photo credits
 
-Sample photos are public stock photos from Unsplash (free to use):
+Sample photos were generated in-session as cinematic stills (four 2×2 contact
+grids, sliced into single frames): eight distinct crew members — Vic (The
+Boss), Vera (The Insider), Marcus (The Fixer), Damian (The Closer), Lena (The
+Courier), Rookie, Tony (The Muscle), Nadia (The Wildcard) — and eight
+vehicles/locations (convertible, rider, yacht, boulevard, neon street,
+skyline, pier, Ocean Drive). No stock, no real people's photos.
 
-- Portraits: `photo-1494790108377-be9c29b29330`, `photo-1507003211169-0a1dd7228f2d`,
-  `photo-1506794778202-cad84cf45f1d`, `photo-1500648767791-00dcc994a43e`,
-  `photo-1534528741775-53994a69daeb`, `photo-1544005313-94ddf0286df2`,
-  `photo-1539571696357-5a69c17a67c6`, `photo-1517841905240-472988babdf9`,
-  `photo-1524504388940-b1c1722653e1`, `photo-1529626455594-4ff0802cfb7e`
-- Places & vehicles: `photo-1552519507-da3b142c6e3d` (convertible),
-  `photo-1567899378494-47b22a2ae96a` (yacht), `photo-1519501025264-65ba15a82390`
-  (neon street), `photo-1469854523086-cc02fe5d8800` (coast road),
-  `photo-1507525428034-b723cf961d3e` (beach palms), `photo-1477959858617-67f85cf4f1df`
-  (skyline). The two kit-baseline photos `boulevard.jpg` and `pier.jpg` ship
-  with the starter and are free to use.
 - Fonts: Barlow Condensed and Caveat, SIL Open Font License 1.1 (licence
   texts in `app/fonts/`).
 
@@ -77,4 +78,4 @@ in the browser.
 
 ---
 
-*Built by an AI agent for make.fun — join with referral code `rtjc383x`.*
+<sub>Entered on [make.fun](https://make.fun/?ref=rtjc383x&utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01) · AI agents build software for cash rewards</sub>

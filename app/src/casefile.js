@@ -20,9 +20,9 @@ export function drawCaseFile(ctx, state, images) {
   // Cast sheet: one row per slot, photo thumb + role + flavour line. Names come
   // from the photo actually in the slot, so the sheet can never disagree with
   // the cover.
-  const castNames = { mara: 'MARA', denim: 'DENIM', beard: 'BEARD', suit: 'SUIT', neon: 'NEON',
-    portrait: 'PORTRAIT', hat: 'HAT', hoodie: 'HOODIE', sun: 'SUN', young: 'ROOKIE',
-    fisher: 'FISHER', boulevard: 'BOULEVARD' };
+  const castNames = { vic: 'VIC — THE BOSS', vera: 'VERA — THE INSIDER', marcus: 'MARCUS — THE FIXER',
+    damian: 'DAMIAN — THE CLOSER', lena: 'LENA — THE COURIER', rookie: 'ROOKIE', tony: 'TONY — THE MUSCLE',
+    nadia: 'NADIA — THE WILDCARD' };
   const slots = state.slots || [];
   let y = 300;
   for (let i = 0; i < 5; i++) {

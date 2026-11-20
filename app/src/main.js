@@ -12,18 +12,18 @@ const ctx = canvas.getContext('2d');
 
 export function defaultState() {
   return {
-    aspect: '1:1', layout: 'coast',
+    aspect: '16:9', layout: 'crew',
     slots: [
-      { photoId: 'hero-mara', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
+      { photoId: 'hero-vic', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
+      { photoId: 'vera', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
       { photoId: 'convertible', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
-      { photoId: 'speedboat', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
-      { photoId: 'neon-street', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
+      { photoId: 'rider', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
       { photoId: 'skyline', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
-      { photoId: 'man-denim', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
+      { photoId: 'marcus', zoom: 1, panX: 0, panY: 0, rot: 0, flip: false },
     ],
     title: 'VELVET COAST', script: 'one last summer',
     tagline: 'FIVE FRIENDS · ONE COAST · NO WAY BACK',
-    gradeId: 'vice', strength: 1, contrast: 1, saturation: 1, grain: 1, vignette: 1,
+    gradeId: 'golden', strength: 1, contrast: 1, saturation: 1, grain: 1, vignette: 1,
     halftone: true, heat: 2, showMarkers: true,
   };
 }
@@ -160,12 +160,12 @@ function buildUI() {
   document.querySelectorAll('[data-layout]').forEach((b) => b.addEventListener('click', () => {
     pushHistory(); state.layout = b.dataset.layout;
     if (state.layout === 'mosaic') {
-      state.slots[1].photoId = 'man-denim'; state.slots[2].photoId = 'woman-neon';
-      state.slots[3].photoId = 'convertible'; state.slots[4].photoId = 'speedboat'; state.slots[5].photoId = 'skyline';
+      state.slots[1].photoId = 'vera'; state.slots[2].photoId = 'damian';
+      state.slots[3].photoId = 'convertible'; state.slots[4].photoId = 'rider'; state.slots[5].photoId = 'skyline';
     }
-    if (state.layout === 'coast') {
-      state.slots[1].photoId = 'convertible'; state.slots[2].photoId = 'speedboat';
-      state.slots[3].photoId = 'neon-street'; state.slots[4].photoId = 'skyline';
+    if (state.layout === 'crew') {
+      state.slots[1].photoId = 'vera'; state.slots[2].photoId = 'convertible';
+      state.slots[3].photoId = 'rider'; state.slots[4].photoId = 'skyline'; state.slots[5].photoId = 'marcus';
     }
     if (state.layout === 'bleed') {
       // Full Bleed keeps the face in the top two thirds by crop. A tall portrait
