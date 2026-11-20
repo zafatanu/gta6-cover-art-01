@@ -3,21 +3,156 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Velvet Coast — Cover Studio</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+<header class="topbar">
+  <div class="brand">VELVET COAST <span>Cover Studio</span></div>
+  <ol class="steps">
+    <li class="on">1 · Add photos</li>
+    <li>2 · Layout &amp; grade</li>
+    <li>3 · Export PNG</li>
+  </ol>
+  <div class="top-actions">
+    <button id="undoBtn" type="button" title="Undo (Ctrl+Z)">Undo</button>
+    <button id="redoBtn" type="button" title="Redo (Ctrl+Y)">Redo</button>
+    <button id="surpriseBtn" type="button" class="accent">Surprise me</button>
+  </div>
+</header>
+
+<main class="studio">
+  <aside class="rail left">
+    <section class="card">
+      <h2>Photos</h2>
+      <p class="note">Your photos stay on your computer — nothing is uploaded.</p>
+      <label class="upload">Add photos…
+        <input id="photoInput" type="file" accept="image/*" multiple>
+      </label>
+      <p class="note">Or drop a photo onto a panel, or paste one in.</p>
+      <div id="libraryGrid" class="library"></div>
+      <div class="row">
+        <button id="fillAllBtn" type="button">Fill all panels from this photo</button>
+        <button id="spreadBtn" type="button">Spread photos across panels</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Layout</h2>
+      <div id="layoutGrid" class="layout-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>Grade</h2>
+      <div id="gradeGrid" class="grade-grid"></div>
+      <div class="slider"><label>Strength <span id="slStrengthVal"></span></label>
+        <input id="slStrength" type="range" min="0" max="1" step="0.01" value="0.85"></div>
+      <div class="slider"><label>Contrast <span id="slContrastVal"></span></label>
+        <input id="slContrast" type="range" min="0.7" max="1.4" step="0.01" value="1"></div>
+      <div class="slider"><label>Saturation <span id="slSaturationVal"></span></label>
+        <input id="slSaturation" type="range" min="0.7" max="1.4" step="0.01" value="1"></div>
+      <div class="slider"><label>Grain <span id="slGrainVal"></span></label>
+        <input id="slGrain" type="range" min="0" max="2" step="0.01" value="1"></div>
+      <div class="slider"><label>Vignette <span id="slVignetteVal"></span></label>
+        <input id="slVignette" type="range" min="0" max="2" step="0.01" value="1"></div>
+      <div class="slider"><label>Halftone <span id="slHalftoneVal"></span></label>
+        <input id="slHalftone" type="range" min="0" max="2" step="0.01" value="1"></div>
+    </section>
+
+    <section class="card">
+      <h2>Wanted heat</h2>
+      <div id="heatDial" class="heat-dial"></div>
+      <p id="heatLabel" class="note"></p>
+    </section>
+  </aside>
+
+  <section class="stage-col">
+    <div id="sizeTabs" class="size-tabs">
+      <button type="button" data-size="1080x1080">1 : 1 · 1080×1080</button>
+      <button type="button" data-size="1080x1350">4 : 5 · 1080×1350</button>
+      <button type="button" data-size="1920x1080">16 : 9 · 1920×1080</button>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="stage" width="780" height="780" aria-label="The cover preview"></canvas>
+    </div>
+    <p class="hint">Click a panel to select it · drag inside a panel to pan the photo · scroll to zoom ·
+      drag a numbered marker to move the face point · Alt-drag swaps panels</p>
+    <p id="statusLine" class="status" role="status"></p>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <aside class="rail right">
+    <section class="card">
+      <h2 id="panelLabel">Panel 1</h2>
+      <label>Photo
+        <select id="panelPhoto"></select>
+      </label>
+      <div class="slider"><label>Zoom <span id="panelZoomVal"></span></label>
+        <input id="panelZoom" type="range" min="1" max="4" step="0.01" value="1"></div>
+      <div class="slider"><label>Move X <span id="panelXVal"></span></label>
+        <input id="panelX" type="range" min="-0.5" max="0.5" step="0.01" value="0"></div>
+      <div class="slider"><label>Move Y <span id="panelYVal"></span></label>
+        <input id="panelY" type="range" min="-0.5" max="0.5" step="0.01" value="0"></div>
+      <div class="slider"><label>Rotation <span id="panelRotVal"></span></label>
+        <input id="panelRot" type="range" min="-25" max="25" step="1" value="0"></div>
+      <div class="row">
+        <button id="panelFlip" type="button">Flip</button>
+        <button id="panelReset" type="button">Reset crop</button>
+      </div>
+      <label>Panel grade
+        <select id="panelGrade"></select>
+      </label>
+      <label>Role tag <input id="panelRole" type="text" maxlength="24" placeholder="THE BOSS"></label>
+      <label>Place <input id="panelPlace" type="text" maxlength="24" placeholder="OCEAN DRIVE"></label>
+      <div class="row">
+        <label>Time <input id="panelTime" type="text" maxlength="10" placeholder="6:42 PM"></label>
+        <label>Flavour <input id="panelFlavour" type="text" maxlength="28" placeholder="LOOKING FOR TROUBLE"></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Caption</h2>
+      <label>Title <input id="capTitle" type="text" maxlength="24"></label>
+      <label>Script subtitle <input id="capSubtitle" type="text" maxlength="40"></label>
+      <label>Tagline <input id="capTagline" type="text" maxlength="48"></label>
+      <label>Press quote <input id="capQuote" type="text" maxlength="48"></label>
+      <div class="row">
+        <label>Quote source <input id="capSource" type="text" maxlength="28"></label>
+        <label>Volume <input id="capVolume" type="text" maxlength="12"></label>
+      </div>
+      <div class="row">
+        <label>Catalogue no. <input id="capCatalogue" type="text" maxlength="16"></label>
+        <label>Studio <input id="capStudio" type="text" maxlength="32"></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Poster furniture</h2>
+      <div class="checks">
+        <label><input id="showQuoteBar" type="checkbox"> Stars + press quote</label>
+        <label><input id="showVolume" type="checkbox"> Volume tag</label>
+        <label><input id="showSeal" type="checkbox"> Gold seal</label>
+        <label><input id="showTagline" type="checkbox"> Tagline pill</label>
+        <label><input id="showBilling" type="checkbox"> Billing block</label>
+        <label><input id="showBarcode" type="checkbox"> Barcode + catalogue no.</label>
+        <label><input id="showRoles" type="checkbox"> Role name tags</label>
+        <label><input id="showLocations" type="checkbox"> Location captions</label>
+        <label><input id="showPalms" type="checkbox"> Palm strip (16:9)</label>
+        <label><input id="showMarkers" type="checkbox"> Face markers</label>
+      </div>
+    </section>
+
+    <section class="card export">
+      <h2>Export PNG</h2>
+      <button id="export1x1" type="button">Export 1080 × 1080</button>
+      <button id="export4x5" type="button">Export 1080 × 1350</button>
+      <button id="export16x9" type="button">Export 1920 × 1080</button>
+      <button id="exportCase" type="button">Export Case File back cover</button>
+      <button id="exportAll" type="button" class="accent">Export all three + Case File</button>
+      <p class="note">Exports render at full output resolution — never a screenshot of this page.</p>
+    </section>
+  </aside>
 </main>
+
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
