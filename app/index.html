@@ -65,24 +65,12 @@
       <canvas id="cover" width="1080" height="1080" aria-label="The cover preview"></canvas>
     </div>
     <p class="stage-hint">Click a panel to select it · drag inside it to move the photo · scroll to zoom · Alt-drag a panel onto another to swap</p>
-    <label class="check inline"><input id="cMarkers" type="checkbox"> Show face markers</label>
+    <label class="check inline"><input id="cMarkers" type="checkbox" checked> Show face markers</label>
   </section>
 
   <aside class="rail right">
-    <section>
-      <h2>Caption</h2>
-      <label>Title <input id="fTitle" type="text" maxlength="24" value="AFTER DARK"></label>
-      <label>Script subtitle <input id="fScript" type="text" maxlength="40" value="every story has a price"></label>
-      <label>Tagline <input id="fTagline" type="text" maxlength="60" value="FIVE FRIENDS · ONE COAST · NO WAY BACK"></label>
-      <label>Press quote <input id="fQuote" type="text" maxlength="48" value="A FEVER DREAM IN NEON"></label>
-      <label>Quote source <input id="fQuoteSource" type="text" maxlength="32" value="THE COAST HERALD"></label>
-      <div class="row2">
-        <label>Volume <input id="fVolume" type="text" maxlength="12" value="VOL. 01"></label>
-        <label>Catalogue <input id="fCatalogue" type="text" maxlength="12" value="VC-25-0626"></label>
-      </div>
-      <label>Location label <input id="fLocation" type="text" maxlength="40" value="VICE DISTRICT · 02:14 AM"></label>
-      <label>Studio <input id="fStudio" type="text" maxlength="32" value="VELVET COAST PICTURES"></label>
-    </section>
+    <!-- v2: the panel editor sits first in the right rail (above Caption),
+         so the editor screenshot shows the per-panel controls at a glance. -->
     <section>
       <h2 id="panelTitle">Panel 1 of 9</h2>
       <label>Photo <select id="pPhoto"></select></label>
@@ -104,6 +92,20 @@
         <label>Time <input id="pTime" type="text" maxlength="10" value="6:42 PM"></label>
         <label>Caption line <input id="pLine" type="text" maxlength="28" value="LOOKING FOR TROUBLE"></label>
       </div>
+    </section>
+    <section>
+      <h2>Caption</h2>
+      <label>Title <input id="fTitle" type="text" maxlength="24" value="AFTER DARK"></label>
+      <label>Script subtitle <input id="fScript" type="text" maxlength="40" value="every story has a price"></label>
+      <label>Tagline <input id="fTagline" type="text" maxlength="60" value="FIVE FRIENDS · ONE COAST · NO WAY BACK"></label>
+      <label>Press quote <input id="fQuote" type="text" maxlength="48" value="A FEVER DREAM IN NEON"></label>
+      <label>Quote source <input id="fQuoteSource" type="text" maxlength="32" value="THE COAST HERALD"></label>
+      <div class="row2">
+        <label>Volume <input id="fVolume" type="text" maxlength="12" value="VOL. 01"></label>
+        <label>Catalogue <input id="fCatalogue" type="text" maxlength="12" value="VC-25-0626"></label>
+      </div>
+      <label>Location label <input id="fLocation" type="text" maxlength="40" value="VICE DISTRICT · 02:14 AM"></label>
+      <label>Studio <input id="fStudio" type="text" maxlength="32" value="VELVET COAST PICTURES"></label>
     </section>
     <section>
       <h2>Poster furniture</h2>

@@ -28,7 +28,8 @@ export async function runShot(shot, query, api) {
     api.applyPatch({ layout: 'vice-grid', grade: 'sunset', heat: 3, title: 'AFTER DARK', script: 'every story has a price' });
     api.render();
   }
-  // Let fonts + canvas settle, then signal readiness.
+  // Let fonts + canvas settle, then signal readiness to the screenshot
+  // driver (it waits on window.__shotReady before capturing).
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   await new Promise((resolve) => setTimeout(resolve, 150));
   window.__shotReady = true;

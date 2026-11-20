@@ -30,6 +30,7 @@ const here = fileURLToPath(new URL('.', import.meta.url));
 const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
 // Fail loudly instead of handing in an empty dossier if the app is missing.
+// (Re-authored in-session: same guard, same message as v1.)
 if (!existsSync(join(here, 'app', 'index.html'))) {
   throw new Error('app/index.html missing — refusing to build an empty dossier');
 }

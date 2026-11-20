@@ -181,17 +181,27 @@ function getHalftoneTile() {
   return c;
 }
 
-// ---- panel / photo plumbing ------------------------------------------------
+// Panels and photos are drawn through coverDraw, which honours the
+// focal point (fx, fy) — the face-aware crop anchor — in every layout.
+// v2 wide-hero rule: panels wider than 2:1 use the face-window path so a
+// hero face keeps its forehead and chin at 16:9.
 export function ensurePanels(state, photoCount) {
   const rects = LAYOUTS[state.layout].panelsRects;
   const next = [];
   for (let i = 0; i < rects.length; i++) {
     const old = state.panels[i];
     const place = PLACES[i % PLACES.length];
-    next.push(old && old.layout === state.layout ? old : {
+    if (old && old.layout === state.layout) { next.push(old); continue; }
+    const photo = photoCount ? i % photoCount : -1;
+    // A layout change rebuilds the panels: keep the face-aware focal by
+    // reusing the focal of any existing panel showing the same photo,
+    // instead of resetting every crop to dead centre (which cut foreheads
+    // in the 4:5 and 16:9 shot scenes).
+    const donor = photo >= 0 ? state.panels.find((p) => p.photo === photo) : null;
+    next.push({
       layout: state.layout,
-      photo: photoCount ? i % photoCount : -1,
-      zoom: 1, fx: 0.5, fy: 0.5, flip: false, grade: '',
+      photo,
+      zoom: 1, fx: donor ? donor.fx : 0.5, fy: donor ? donor.fy : 0.5, flip: false, grade: '',
       tag: ROLE_TAGS[i % ROLE_TAGS.length],
       place: place.place, time: place.time, line: place.line,
     });
@@ -203,13 +213,41 @@ function coverDraw(ctx, img, px, py, pw, ph, panel) {
   // Cover-fit the photo into the panel rect, honouring focal point + zoom.
   const iw = img.naturalWidth || img.width;
   const ih = img.naturalHeight || img.height;
-  const scale = Math.max(pw / iw, ph / ih) * (panel.zoom || 1);
-  const dw = iw * scale, dh = ih * scale;
-  const fx = panel.fx ?? 0.5, fy = panel.fy ?? 0.5;
-  let dx = px + pw / 2 - dw * fx;
-  let dy = py + ph / 2 - dh * fy;
-  dx = Math.min(px, Math.max(px + pw - dw, dx));
-  dy = Math.min(py, Math.max(py + ph - dh, dy));
+  const aspect = pw / ph;
+  let dw, dh, dx, dy;
+  if (aspect > 2) {
+    // WIDE HERO (v2): a width-driven cover fit on a portrait photo crops
+    // the face top-to-bottom — forehead and chin get cut. Instead, paint
+    // the photo once as a darkened, blurred cover backdrop that fills the
+    // panel, then draw the sharp photo again at a scale where a face
+    // window (42% of the image height, centred on the focal point) fits
+    // inside the panel height, so forehead + chin stay in frame. The
+    // backdrop fills any side gaps, so the panel never shows bare sky.
+    const bScale = Math.max(pw / iw, ph / ih);
+    const bdw = iw * bScale, bdh = ih * bScale;
+    ctx.save();
+    ctx.filter = 'blur(18px) brightness(0.55) saturate(1.1)';
+    ctx.drawImage(img, px + pw / 2 - bdw / 2, py + ph / 2 - bdh / 2, bdw, bdh);
+    ctx.restore();
+    const sFace = (ph / (0.42 * ih)) * (panel.zoom || 1);
+    dw = iw * sFace; dh = ih * sFace;
+    const fx = panel.fx ?? 0.5, fy = panel.fy ?? 0.5;
+    // Centre the focal point in the panel: when the sharp window is
+    // narrower than the panel it sits where the face is, not dead centre.
+    dx = px + pw / 2 - dw * fx;
+    dx = dw >= pw ? Math.min(px, Math.max(px + pw - dw, dx))
+                  : Math.min(px + pw - dw, Math.max(px, dx));
+    dy = py + ph / 2 - dh * fy;
+    dy = Math.min(py, Math.max(py + ph - dh, dy));
+  } else {
+    const scale = Math.max(pw / iw, ph / ih) * (panel.zoom || 1);
+    dw = iw * scale; dh = ih * scale;
+    const fx = panel.fx ?? 0.5, fy = panel.fy ?? 0.5;
+    dx = px + pw / 2 - dw * fx;
+    dy = py + ph / 2 - dh * fy;
+    dx = Math.min(px, Math.max(px + pw - dw, dx));
+    dy = Math.min(py, Math.max(py + ph - dh, dy));
+  }
   if (panel.flip) {
     ctx.save();
     ctx.translate(px + pw / 2, 0);
@@ -412,11 +450,14 @@ export function renderCover(canvas, state, photos, opts = {}) {
     if (state.furniture.places && panel.place && !layout.board) {
       const fs = Math.max(10, H * 0.0135);
       const stripH = fs * 2.5;
-      // Skip this strip when the title covers its first text line.
+      // Skip this strip when the title covers its first text line. The
+      // band spans the whole panel width, so the test uses the panel
+      // edges, not just the text width — a band peeking out from behind
+      // the title reads as a clipped fragment.
       ctx.font = `800 ${fs}px "Barlow Condensed", sans-serif`;
       const firstLine = `${panel.place}  ·  ${panel.time}`;
-      const stripL = px + pw * 0.04;
-      const stripR = stripL + ctx.measureText(firstLine).width;
+      const stripL = px;
+      const stripR = px + pw;
       const firstTop = py + fs * 0.45, firstBottom = py + fs * 1.25;
       const covered = stripR > titleBox.l && stripL < titleBox.r && firstBottom > titleBox.t && firstTop < titleBox.b;
       if (covered) {

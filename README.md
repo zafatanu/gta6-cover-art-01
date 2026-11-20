@@ -14,9 +14,10 @@
 - **6 grades on one pipeline** — Vice Sunset, Neon Night, Golden Hour, Duotone Pink/Teal, Comic Ink, Noir Heat — with Strength, Contrast, Saturation, Grain, Vignette and halftone controls, plus a per-panel grade override (including a B&W panel among colour ones).
 - **Wanted-level heat dial (1–5 stars)** — the twist: turning the dial re-grades the whole poster. 1 star is calm Golden Hour; 5 stars is full Neon Night with a red/blue police-light wash, and the tagline and press quote switch with it ("FIVE STARS · NO WAY OUT").
 - **The poster formula** — giant striped-gradient condensed block title overlapping the panels, pink neon script subtitle, 5-star press-quote bar, volume tag, gold "ORIGINAL COVER ART" seal, tagline pill, billing block and barcode with catalogue number. Every piece of furniture is toggleable and every caption is editable.
-- **Photo engine** — multi-photo library (drag, drop, paste or upload), face-aware auto crop with numbered face markers, drag-to-pan and scroll-to-zoom inside any panel, flip, per-panel photo picker, Alt-drag to swap panels, "Fill all panels from this photo" and "Spread photos across panels", undo/redo, and "Surprise me".
+- **Photo engine** — multi-photo library (drag, drop, paste or upload), face-aware auto crop with numbered face markers (on by default), drag-to-pan and scroll-to-zoom inside any panel, flip, per-panel photo picker, Alt-drag to swap panels, "Fill all panels from this photo" and "Spread photos across panels", undo/redo, and "Surprise me".
 - **Panel captions, both systems** — role name tags ("THE INSIDER", "THE DRIVER"…) *and* location captions (place + time + flavour line, e.g. "OCEAN DRIVE · 6:42 PM · LOOKING FOR TROUBLE").
 - **Export** — real PNGs rendered at output resolution: 1080×1080, 1080×1350 and 1920×1080 in one click, plus a **Case File back cover** (1080×1350): cast sheet, case number, evidence thumbnails and the full location itinerary. Exports are deterministic — the same state renders byte-identical PNGs every time (seeded grain, no timestamps in the pixels).
+- **Wide-hero crop** — panels wider than 2:1 draw a blurred cover backdrop with the face window fitted inside it, so a hero face keeps its forehead and chin instead of being cropped by the width-driven fit. The panel editor sits at the top of the right rail, with face markers on by default.
 
 ## Run it
 

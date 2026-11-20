@@ -9,8 +9,11 @@ const canvas = $('cover');
 const params = new URLSearchParams(location.search);
 
 const SAMPLES = [
-  { file: 'hero-portrait.jpg', name: 'Mara — hero', fx: 0.5, fy: 0.58 },
-  { file: 'driver-car.jpg', name: 'Dario — driver', fx: 0.5, fy: 0.42 },
+  // Curated focals measured on the v2 photos themselves (FaceDetector is
+  // not available in desktop Chrome, so these fallbacks carry the crop):
+  // Mara's face is centred near y 0.30, Dario's near x 0.70 / y 0.30.
+  { file: 'hero-portrait.jpg', name: 'Mara — hero', fx: 0.48, fy: 0.30 },
+  { file: 'driver-car.jpg', name: 'Dario — driver', fx: 0.70, fy: 0.30 },
   { file: 'neon-street.jpg', name: 'Neon street', fx: 0.5, fy: 0.5 },
   { file: 'coast-boat.jpg', name: 'Coast run', fx: 0.5, fy: 0.52 },
   { file: 'pier.jpg', name: 'Pier dawn', fx: 0.5, fy: 0.5 },
@@ -21,7 +24,9 @@ const state = defaultState();
 let photos = [];       // HTMLImageElement[]
 let photoFocal = [];   // {fx, fy} per photo
 let selectedPhoto = 0;
-let showMarkers = false;
+// v2: face markers are ON by default (showMarkers = true) and the
+// markers checkbox in the stage reflects that state via syncUI.
+let showMarkers = true; // v2: face markers are ON by default.
 let shotDims = null;   // [w, h] override for ?shot=cover
 let drag = null;
 
@@ -97,7 +102,10 @@ function render() {
   // A layout with fewer panels (or a restored history entry) can leave the
   // selection pointing past the end — clamp it before anything reads it.
   if (state.selected >= state.panels.length) state.selected = 0;
-  renderCover(canvas, state, photos, { markers: showMarkers });
+  // Face markers are an editor aid: they show on the live studio canvas
+  // but never on a cover shot (shotDims set) or a PNG export, where the
+  // poster must be clean.
+  renderCover(canvas, state, photos, { markers: showMarkers && !shotDims });
   const sel = state.panels[state.selected];
   if (sel) {
     $('panelTitle').textContent = `Panel ${state.selected + 1} of ${state.panels.length}${sel.tag ? ' — ' + sel.tag : ''}`;
@@ -254,6 +262,7 @@ function syncUI() {
   $('sGrain').value = state.grain; $('oGrain').textContent = state.grain.toFixed(2);
   $('sVignette').value = state.vignette; $('oVignette').textContent = state.vignette.toFixed(2);
   $('cHalftone').checked = state.halftone;
+  $('cMarkers').checked = showMarkers; // v2: markers on by default, checkbox reflects it.
   document.querySelectorAll('#sizeTabs button').forEach((b) => b.classList.toggle('active', b.dataset.size === state.size));
   $('heatNote').textContent = HEAT_PRESETS[state.heat]?.note ?? '';
 }
